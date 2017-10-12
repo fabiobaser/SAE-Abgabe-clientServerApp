@@ -50,5 +50,6 @@ app.post("/user/login/", user.checkLogin);
 app.set("port", process.env.PORT || config["expressConfig"].PORT);
 
 app.listen(app.get("port"), function() {
-  console.log("Express server listening on Port " + app.get("port"));
+  console.log("\x1b[32m%s\x1b[0m", "Express server listening on Port " + app.get("port"));
+  console.log("\n");
 });
