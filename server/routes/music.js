@@ -24,6 +24,7 @@ exports.queryMusic = (req, res, next) => {
       console.error("Error while performing query: ", err);
       res.send(null);
     } else {
+      // console.log(req.query);
       res.send(rows);
     }
   });
