@@ -4,6 +4,7 @@ import { BrowserRouter as Switch, Route } from "react-router-dom";
 //COMPS
 import { TopMenu } from "./Components/general";
 import { MusicAdd } from "./Components/music_add";
+import { MusicSearch } from "./Components/music_search";
 
 class Home extends Component {
   render() {
@@ -23,7 +24,7 @@ export default class App extends Component {
         <div>
           <Route exact path="/" component={Home} />
 
-          {/* <Route path="/music/search" component={Music.Search} /> */}
+          <Route path="/music/search" component={MusicSearch} />
           <Route path="/music/add" component={MusicAdd} />
           {/* <Route path="/music/playlists" component={Music.Playlists} /> */}
 
