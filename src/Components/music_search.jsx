@@ -31,7 +31,7 @@ export class MusicSearch extends Component {
       data: [],
       tags: tags,
       searchDances: config.dances,
-      dances: dances
+      dances: config.dances.latein.concat(config.dances.standard, config.dances.misc)
     };
   }
 
@@ -58,9 +58,9 @@ export class MusicSearch extends Component {
   };
 
   handleSearchTag = e => {
-    let searchTags = this.state.searchTags;
-    searchTags[e.target.text] = !this.state.searchTags[e.target.text];
-    this.setState(searchTags);
+    let searchTags = this.state.tags;
+    searchTags[e.target.text] = !this.state.tags[e.target.text];
+    this.setState({ tags: searchTags });
   };
 
   render() {
@@ -93,7 +93,7 @@ export class MusicSearch extends Component {
       );
     });
 
-    let searchDancesElem = Object.keys(this.state.searchDances).map(dance => {
+    let searchDancesElem = this.state.dances.map(dance => {
       let labelState;
       if (this.state.searchDances[dance]) {
         labelState = "teal";
@@ -110,7 +110,7 @@ export class MusicSearch extends Component {
     let searchTagsElem = Object.keys(this.state.tags).map((tag, tagIndex) => {
       let labelState;
       if (this.state.tags[tag]) {
-        labelState = "teal";
+        labelState = "pink";
       } else {
         labelState = null;
       }
