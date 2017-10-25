@@ -1,6 +1,8 @@
 import React, { Component } from "react";
 import axios from "axios";
 import { Button, Form, Search, Container, Input, Image, Header, Label, Message, Grid } from "semantic-ui-react";
+//Config
+const config = require("../config");
 
 export class MusicAdd extends Component {
   constructor() {
@@ -17,19 +19,43 @@ export class MusicAdd extends Component {
     this.resetComponent();
   }
 
-  resetComponent = () =>
+  resetComponent = () => {
+    let lateinObj = {};
+    config.dances.latein.map(item => {
+      lateinObj[item] = false;
+    });
+
+    let standardObj = {};
+    config.dances.standard.map(item => {
+      standardObj[item] = false;
+    });
+
+    let miscObj = {};
+    config.dances.misc.map(item => {
+      miscObj[item] = false;
+    });
+
+    let dances = { latein: lateinObj, standard: standardObj, misc: miscObj };
+
+    let tags = {};
+    config.tags.map(tag => {
+      tags[tag] = false;
+    });
+
     this.setState({
       isLoading: false,
       results: [],
       titleValue: "",
       artistValue: "",
       cover: "",
-      activeDanceTags: {
-        tango: false
-      },
+      activeDanceTags: [],
       dancesArray: [],
+      tagsArray: [],
+      dances: dances,
+      tags: tags,
       success: false
     });
+  };
 
   handleResultSelect = (e, { result }) => {
     this.setState({ titleValue: result.title });
@@ -118,7 +144,8 @@ export class MusicAdd extends Component {
           params: {
             title: this.state.titleValue.replace(regex, subst),
             artist: this.state.artistValue.replace(regex, subst),
-            dances: JSON.stringify(this.state.dancesArray).replace(regex, subst)
+            dances: JSON.stringify(this.state.dancesArray).replace(regex, subst),
+            tags: JSON.stringify(this.state.tagsArray).replace(regex, subst)
           }
         })
         .then(function(response) {
@@ -134,8 +161,132 @@ export class MusicAdd extends Component {
     }
   };
 
+  lateinClick = e => {
+    let localDancesArray = this.state.dancesArray;
+    if (localDancesArray.indexOf(e.target.text) === -1) {
+      localDancesArray.push(e.target.text);
+    } else {
+      localDancesArray.splice(localDancesArray.indexOf(e.target.text), 1);
+    }
+
+    //toggle
+    let tmp = this.state.dances;
+    console.log(tmp.latein[e.target.text]);
+    tmp.latein[e.target.text] = !tmp.latein[e.target.text];
+    this.setState({ dances: tmp });
+
+    console.log(this.state.dancesArray);
+  };
+
+  standardClick = e => {
+    let localDancesArray = this.state.dancesArray;
+    if (localDancesArray.indexOf(e.target.text) === -1) {
+      localDancesArray.push(e.target.text);
+    } else {
+      localDancesArray.splice(localDancesArray.indexOf(e.target.text), 1);
+    }
+
+    //toggle
+    let tmp = this.state.dances;
+    console.log(tmp.standard[e.target.text]);
+    tmp.standard[e.target.text] = !tmp.standard[e.target.text];
+    this.setState({ dances: tmp });
+
+    console.log(this.state.dancesArray);
+  };
+
+  miscClick = e => {
+    let localDancesArray = this.state.dancesArray;
+    if (localDancesArray.indexOf(e.target.text) === -1) {
+      localDancesArray.push(e.target.text);
+    } else {
+      localDancesArray.splice(localDancesArray.indexOf(e.target.text), 1);
+    }
+
+    //toggle
+    let tmp = this.state.dances;
+    console.log(tmp.misc[e.target.text]);
+    tmp.misc[e.target.text] = !tmp.misc[e.target.text];
+    this.setState({ dances: tmp });
+
+    console.log(this.state.dancesArray);
+  };
+
+  tagClick = e => {
+    let localTagsArray = this.state.tagsArray;
+    if (localTagsArray.indexOf(e.target.text) === -1) {
+      localTagsArray.push(e.target.text);
+    } else {
+      localTagsArray.splice(localTagsArray.indexOf(e.target.text), 1);
+    }
+
+    //toggle
+    let tmp = this.state.tags;
+    console.log(tmp[e.target.text]);
+    tmp[e.target.text] = !tmp[e.target.text];
+    this.setState({ tags: tmp });
+
+    console.log(this.state.tags);
+  };
+
   render() {
     const { isLoading, titleValue, artistValue, results, activeDanceTags, cover } = this.state;
+
+    let latein = Object.keys(this.state.dances.latein).map(dance => {
+      let labelState;
+      if (this.state.dances.latein[dance]) {
+        labelState = "green";
+      } else {
+        labelState = null;
+      }
+      return (
+        <Label as="a" color={labelState} key={dance} onClick={this.lateinClick}>
+          {dance}
+        </Label>
+      );
+    });
+
+    let standard = Object.keys(this.state.dances.standard).map(dance => {
+      let labelState;
+      if (this.state.dances.standard[dance]) {
+        labelState = "blue";
+      } else {
+        labelState = null;
+      }
+      return (
+        <Label as="a" color={labelState} key={dance} onClick={this.standardClick}>
+          {dance}
+        </Label>
+      );
+    });
+
+    let misc = Object.keys(this.state.dances.misc).map(dance => {
+      let labelState;
+      if (this.state.dances.misc[dance]) {
+        labelState = "orange";
+      } else {
+        labelState = null;
+      }
+      return (
+        <Label as="a" color={labelState} key={dance} onClick={this.miscClick}>
+          {dance}
+        </Label>
+      );
+    });
+
+    let tags = Object.keys(this.state.tags).map(tag => {
+      let labelState;
+      if (this.state.tags[tag]) {
+        labelState = "pink";
+      } else {
+        labelState = null;
+      }
+      return (
+        <Label tag as="a" color={labelState} key={tag} onClick={this.tagClick}>
+          {tag}
+        </Label>
+      );
+    });
 
     return (
       <Grid>
@@ -189,54 +340,24 @@ export class MusicAdd extends Component {
                 </Label>
               )}
               <p>Und was kann man dazu tanzen?</p>
+              <Container width={4}>
+                <Label.Group>{latein}</Label.Group>
+              </Container>
+              <br />
+              <Container width={4}>
+                <Label.Group>{standard}</Label.Group>
+              </Container>
+              <br />
+              <Container width={4}>
+                <Label.Group>{misc}</Label.Group>
+              </Container>
+              <br />
 
+              <p>Etwas bessonderes?</p>
               <Container width={4}>
-                <Button size="mini" toggle active={activeDanceTags.chachacha} value="chachacha" onClick={this.danceTagClick}>
-                  ChaChaCha
-                </Button>
-                <Button size="mini" toggle active={activeDanceTags.samba} value="samba" onClick={this.danceTagClick}>
-                  Samba
-                </Button>
-                <Button size="mini" toggle active={activeDanceTags.rumba} value="rumba" onClick={this.danceTagClick}>
-                  Rumba
-                </Button>
-                <Button size="mini" toggle active={activeDanceTags.salsa} value="salsa" onClick={this.danceTagClick}>
-                  Salsa
-                </Button>
-                <Button size="mini" toggle active={activeDanceTags.jive} value="jive" onClick={this.danceTagClick}>
-                  Jive
-                </Button>
+                <Label.Group>{tags}</Label.Group>
               </Container>
-              <br />
-              <Container width={4}>
-                <Button size="mini" toggle active={activeDanceTags.waltzer} value="waltzer" onClick={this.danceTagClick}>
-                  Wiener Waltzer
-                </Button>
-                <Button size="mini" toggle active={activeDanceTags.langWaltzer} value="langWaltzer" onClick={this.danceTagClick}>
-                  Langs. Waltzer
-                </Button>
-                <Button size="mini" toggle active={activeDanceTags.quickstep} value="quickstep" onClick={this.danceTagClick}>
-                  Quickstep
-                </Button>
-                <Button size="mini" toggle active={activeDanceTags.tango} value="tango" onClick={this.danceTagClick}>
-                  Tango
-                </Button>
-                <Button size="mini" toggle active={activeDanceTags.slowfox} value="slowfox" onClick={this.danceTagClick}>
-                  Slowfox
-                </Button>
-                <Button size="mini" toggle active={activeDanceTags.discofox} value="discofox" onClick={this.danceTagClick}>
-                  Discofox
-                </Button>
-                <Button size="mini" toggle active={activeDanceTags.foxtrott} value="foxtrott" onClick={this.danceTagClick}>
-                  Foxtrott
-                </Button>
-              </Container>
-              <br />
-              <Button size="mini" toggle active={activeDanceTags.tangoArg} value="tangoArg" onClick={this.danceTagClick}>
-                Tango Argentino
-              </Button>
-              <br />
-              <Button color="green" onClick={this.handleSubmit} style={{ marginTop: "3em" }}>
+              <Button color="teal" onClick={this.handleSubmit} style={{ marginTop: "3em", marginBottom: "3em" }}>
                 Abschicken
               </Button>
             </Form>
