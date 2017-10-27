@@ -10,13 +10,15 @@
     "react-router-dom": "^4.2.2",
     "react-scripts": "1.0.14",
     "semantic-ui-css": "^2.2.12",
-    "semantic-ui-react": "^0.74.2"
+    "semantic-ui-react": "^0.74.2",
+    "web_app_server": "file:server"
   },
   "scripts": {
     "start": "react-scripts start",
     "server": "clear; node server/server.js",
     "build": "react-scripts build",
     "test": "react-scripts test --env=jsdom",
-    "eject": "react-scripts eject"
+    "eject": "react-scripts eject",
+    "fabio": "npm install && npm install --prefix server/ && rm -r server/etc && echo Alles Installiert"
   }
 }
