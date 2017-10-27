@@ -1,6 +1,6 @@
 module.exports = {
   dances: {
-    latein: ["Salsa", "Samba", "Jive"],
+    latein: ["Rumba", "Salsa", "Samba", "Jive"],
     standard: ["Waltzer", "Langsamer Waltzer", "Quickstep", "Slowfox", "Tango"],
     misc: ["Tango Argentino"]
   },

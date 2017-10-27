@@ -11,15 +11,17 @@ export class TopMenu extends Component {
     };
   }
   render() {
+    const path = location.pathname; // eslint-disable-line no-restricted-globals
+
     return (
       <Segment inverted style={{ borderRadius: "0" }}>
-        <Menu inverted pointing secondary>
+        <Menu inverted pointing secondary stackable>
           <Menu.Item header>Projekt Tanzsalon</Menu.Item>
           <Menu.Menu position="right">
             <Menu.Item as={NavLink} to="/" exact>
               Home
             </Menu.Item>
-            <Dropdown item text="Musik">
+            <Dropdown item text="Musik" className={path.indexOf("/music/") !== -1 ? "active" : null}>
               <Dropdown.Menu>
                 <Dropdown.Item as={NavLink} to="/music/search">
                   Suchen

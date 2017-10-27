@@ -1,6 +1,9 @@
 import React, { Component } from "react";
 import axios from "axios";
-import { Grid, Table, Label, Input, Icon, Button, Header, Container } from "semantic-ui-react";
+import { Grid, Table, Label, Input, Icon, Button, Header, Container, Select } from "semantic-ui-react";
+//Helper
+const sorts = require("../Helper/sorts");
+const _ = require("lodash");
 // Config
 const config = require("../config");
 
@@ -28,7 +31,12 @@ export class MusicSearch extends Component {
     });
 
     this.state = {
+      cycleCount: 0,
       data: [],
+      column: null,
+      direction: null,
+      inputValue: "",
+      searchSelect: "title",
       tags: tags,
       searchDances: config.dances,
       dances: config.dances.latein.concat(config.dances.standard, config.dances.misc)
@@ -36,7 +44,9 @@ export class MusicSearch extends Component {
   }
 
   componentWillMount() {
+    this.setState({ cycleCount: this.state.cycleCount + 1 });
     let self = this;
+
     axios
       .get("http://localhost:5000/music/", {
         params: {
@@ -51,20 +61,53 @@ export class MusicSearch extends Component {
       });
   }
 
-  handleSearchDance = e => {
+  handleSearchDance = (e, { name }) => {
     let searchDances = this.state.searchDances;
-    searchDances[e.target.text] = !this.state.searchDances[e.target.text];
+    searchDances[name] = !this.state.searchDances[name];
     this.setState(searchDances);
   };
 
-  handleSearchTag = e => {
+  handleSearchTag = (e, { name }) => {
     let searchTags = this.state.tags;
-    searchTags[e.target.text] = !this.state.tags[e.target.text];
+    searchTags[name] = !this.state.tags[name];
     this.setState({ tags: searchTags });
   };
 
+  handleSort = clickedColumn => () => {
+    const { column, data, direction } = this.state;
+    if (column !== clickedColumn) {
+      this.setState({
+        column: clickedColumn,
+        data: _.sortBy(data, [clickedColumn]),
+        direction: "ascending"
+      });
+
+      return;
+    }
+
+    this.setState({
+      data: data.reverse(),
+      direction: direction === "ascending" ? "descending" : "ascending"
+    });
+  };
+
+  handleInputChange = (e, data) => {
+    this.setState({ inputValue: data.value });
+  };
+
+  handleSearchSubmit = (e, data) => {
+    console.log("Hello, this is a test");
+    console.log(this.state.inputValue);
+  };
+
+  handleSearchEnter = (e, data) => {
+    if (e.key == "Enter") {
+      this.handleSearchSubmit();
+    }
+  };
+
   render() {
-    const { data } = this.state;
+    const { data, column, direction, inputValue, searchSelect } = this.state;
 
     let song = data.map((item, index) => {
       return (
@@ -73,17 +116,35 @@ export class MusicSearch extends Component {
           <Table.Cell>{item.artist}</Table.Cell>
           <Table.Cell>
             <Label.Group>
-              {JSON.parse(item.dances).map((dance, danceIndex) => {
-                return <Label key={danceIndex}>{dance.replace(/\b\w/g, l => l.toUpperCase())}</Label>;
+              {Object.keys(sorts.sortObject(JSON.parse(item.dances), "desc")).map((dance, danceIndex) => {
+                let labelState;
+                if (this.state.searchDances[dance]) {
+                  labelState = "teal";
+                } else {
+                  labelState = null;
+                }
+                return (
+                  <Label as="a" key={danceIndex} name={dance} color={labelState} onClick={this.handleSearchDance}>
+                    {dance}
+                    <Label.Detail>{JSON.parse(item.dances)[dance]}</Label.Detail>
+                  </Label>
+                );
               })}
             </Label.Group>
           </Table.Cell>
           <Table.Cell>
             <Label.Group>
-              {JSON.parse(item.tags).map((tag, tagIndex) => {
+              {Object.keys(JSON.parse(item.tags)).map((tag, tagIndex) => {
+                let labelState;
+                if (this.state.tags[tag]) {
+                  labelState = "pink";
+                } else {
+                  labelState = null;
+                }
                 return (
-                  <Label key={tagIndex} size="mini" tag>
-                    {tag.replace(/bw/g, l => l.toUpperCase())}
+                  <Label as="a" key={tagIndex} name={tag} color={labelState} size="mini" tag onClick={this.handleSearchTag}>
+                    {tag}
+                    <Label.Detail>{JSON.parse(item.tags)[tag]}</Label.Detail>
                   </Label>
                 );
               })}
@@ -101,7 +162,7 @@ export class MusicSearch extends Component {
         labelState = null;
       }
       return (
-        <Label as="a" color={labelState} key={dance} onClick={this.handleSearchDance}>
+        <Label as="a" color={labelState} key={dance} name={dance} onClick={this.handleSearchDance}>
           {dance}
         </Label>
       );
@@ -115,18 +176,44 @@ export class MusicSearch extends Component {
         labelState = null;
       }
       return (
-        <Label as="a" key={tagIndex} color={labelState} onClick={this.handleSearchTag}>
+        <Label as="a" key={tagIndex} color={labelState} name={tag} onClick={this.handleSearchTag}>
           {tag}
         </Label>
       );
     });
+
+    const searchDrop = [{ key: "title", text: "Titel", value: "title" }, { key: "artist", text: "Künstler", value: "artist" }];
 
     return (
       <div>
         <Header as="h1" textAlign="center">
           Tanzmusik-Datenbank durchsuchen
         </Header>
-        <Grid celled="internally">
+        <Grid>
+          <Grid.Row style={{ marginTop: "3em", marginBottom: "3em" }}>
+            <Grid.Column width={5} />
+            <Grid.Column width={6}>
+              <Input
+                type="text"
+                placeholder="Suchen..."
+                size="big"
+                action
+                fluid
+                value={inputValue}
+                onChange={this.handleInputChange}
+                onKeyPress={this.handleSearchEnter}>
+                <input />
+                <Select compact options={searchDrop} value={searchSelect} />
+                <Button
+                  color="teal"
+                  icon="search"
+                  style={{ paddingLeft: "1.5em", paddingRight: "1.5em" }}
+                  onClick={this.handleSearchSubmit}
+                />
+              </Input>
+            </Grid.Column>
+            <Grid.Column width={5} />
+          </Grid.Row>
           <Grid.Row>
             <Grid.Column width={1} />
             <Grid.Column width={3}>
@@ -136,12 +223,15 @@ export class MusicSearch extends Component {
               <Label.Group tag>{searchTagsElem}</Label.Group>
             </Grid.Column>
             <Grid.Column width={11}>
-              <Input fluid icon="search" />
-              <Table celled>
+              <Table sortable celled fixed>
                 <Table.Header>
                   <Table.Row>
-                    <Table.HeaderCell>Songtitel</Table.HeaderCell>
-                    <Table.HeaderCell>Interpret</Table.HeaderCell>
+                    <Table.HeaderCell sorted={column === "title" ? direction : null} onClick={this.handleSort("title")}>
+                      Songtitel
+                    </Table.HeaderCell>
+                    <Table.HeaderCell sorted={column === "artist" ? direction : null} onClick={this.handleSort("artist")}>
+                      Interpret
+                    </Table.HeaderCell>
                     <Table.HeaderCell>Tänze</Table.HeaderCell>
                     <Table.HeaderCell>Schlagwörter</Table.HeaderCell>
                   </Table.Row>
