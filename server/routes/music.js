@@ -12,7 +12,7 @@ con.connect(err => {
 
 exports.queryMusic = (req, res, next) => {
   const regex = /([~`!#$%\^&*+_()—.—˛¬”£°„¡“¶¢≠¿“±‘–…’ﬁ˜·¯˙˚˛≥∞÷§=´\-\[\]\\';,/{}|\\":<>\?])/gm;
-  const subst = `\$1`;
+  const subst = `\\$1`;
 
   // The substituted value will be contained in the result variable
   let query = req.query.title.replace(regex, subst);
@@ -24,10 +24,131 @@ exports.queryMusic = (req, res, next) => {
       console.error("Error while performing query: ", err);
       res.send(null);
     } else {
-      // console.log(req.query);
+      console.log(req.query);
       res.send(rows);
     }
   });
+};
+
+exports.addSong2 = (req, res) => {
+  console.log(req.query);
+
+  if (
+    typeof req.query.title != "undefined" &&
+    req.query.title !== "" &&
+    typeof req.query.artist != "undefined" &&
+    req.query.artist !== "" &&
+    typeof req.query.dances != "undefined" &&
+    req.query.dances !== "" &&
+    typeof req.query.tags != "undefined" &&
+    req.query.tags !== ""
+  ) {
+    let sqlGetID =
+      "SELECT trackID, dances FROM tracks WHERE `title` LIKE '" + req.query.title + "' AND `artist` LIKE '" + req.query.artist + "'";
+
+    con.query(sqlGetID, (error, results) => {
+      if (results.length === 0) {
+        //Not found
+        let outputDances = {};
+        let outputTags = {};
+        JSON.parse(req.query.dances).map(dance => {
+          outputDances[dance] = 1;
+        });
+
+        JSON.parse(req.query.tags).map(tag => {
+          outputTags[tag] = 1;
+        });
+
+        let sqlInsert =
+          "INSERT INTO `tracks` (`trackID`, `title`, `artist`, `dances`, `tags`) VALUES (NULL, '" +
+          req.query.title +
+          "', '" +
+          req.query.artist +
+          "', '" +
+          JSON.stringify(outputDances) +
+          "', '" +
+          JSON.stringify(outputTags) +
+          "')";
+
+        con.query(sqlInsert, (err, rows, fields) => {
+          if (err) {
+            res.sendStatus(500);
+            console.error(err);
+          } else {
+            res.sendStatus(200);
+          }
+        });
+
+        console.log(outputDances);
+      } else {
+        //FOUND
+        remoteDances = JSON.parse(results[0].dances);
+        let danceObj = JSON.parse(req.query.dances);
+
+        danceObj.map(dance => {
+          if (typeof remoteDances[dance] == "undefined") {
+            remoteDances[dance] = 1;
+          } else {
+            remoteDances[dance] = remoteDances[dance] + 1;
+          }
+        });
+
+        let sqlUpdate =
+          "UPDATE `tracks` SET `dances` = '" +
+          JSON.stringify(remoteDances) +
+          "' WHERE `title` LIKE '" +
+          req.query.title +
+          "' AND `artist` LIKE '" +
+          req.query.artist +
+          "'";
+
+        con.query(sqlUpdate, (err, rows, fields) => {
+          if (err) {
+            res.sendStatus(500);
+            console.error(err);
+          } else {
+            res.sendStatus(200);
+          }
+        });
+
+        console.log(remoteDances);
+      }
+    });
+  }
+};
+
+exports.addSong = (req, res) => {
+  if (
+    typeof req.query.title != "undefined" &&
+    req.query.title !== "" &&
+    typeof req.query.artist != "undefined" &&
+    req.query.artist !== "" &&
+    typeof req.query.dances != "undefined" &&
+    req.query.dances !== "" &&
+    typeof req.query.tags != "undefined" &&
+    req.query.tags !== ""
+  ) {
+    let sql =
+      "INSERT INTO `tracks` (`trackID`, `title`, `artist`, `dances`, `tags`) VALUES (NULL, '" +
+      req.query.title +
+      "', '" +
+      req.query.artist +
+      "', '" +
+      req.query.dances +
+      "', '" +
+      req.query.tags +
+      "')";
+
+    con.query(sql, (err, rows, fields) => {
+      if (err) {
+        res.sendStatus(500);
+      } else {
+        res.sendStatus(200);
+      }
+    });
+  } else {
+    res.sendStatus(505);
+  }
 };
 
 exports.getAll = (req, res, next) => {
