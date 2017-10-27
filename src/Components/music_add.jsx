@@ -23,16 +23,19 @@ export class MusicAdd extends Component {
     let lateinObj = {};
     config.dances.latein.map(item => {
       lateinObj[item] = false;
+      return null;
     });
 
     let standardObj = {};
     config.dances.standard.map(item => {
       standardObj[item] = false;
+      return null;
     });
 
     let miscObj = {};
     config.dances.misc.map(item => {
       miscObj[item] = false;
+      return null;
     });
 
     let dances = { latein: lateinObj, standard: standardObj, misc: miscObj };
@@ -40,6 +43,7 @@ export class MusicAdd extends Component {
     let tags = {};
     config.tags.map(tag => {
       tags[tag] = false;
+      return null;
     });
 
     this.setState({
@@ -230,7 +234,7 @@ export class MusicAdd extends Component {
   };
 
   render() {
-    const { isLoading, titleValue, artistValue, results, activeDanceTags, cover } = this.state;
+    const { isLoading, titleValue, artistValue, results, cover } = this.state;
 
     let latein = Object.keys(this.state.dances.latein).map(dance => {
       let labelState;

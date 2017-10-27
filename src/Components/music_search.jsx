@@ -1,6 +1,6 @@
 import React, { Component } from "react";
 import axios from "axios";
-import { Grid, Table, Label, Input, Icon, Button, Header, Container, Select } from "semantic-ui-react";
+import { Grid, Table, Label, Input, Button, Header, Select } from "semantic-ui-react";
 //Helper
 const sorts = require("../Helper/sorts");
 const _ = require("lodash");
@@ -14,20 +14,24 @@ export class MusicSearch extends Component {
     let tags = {};
     config.tags.map(item => {
       tags[item] = false;
+      return null;
     });
 
     let dances = config.dances;
 
     dances.latein.map(item => {
       dances.latein[item] = false;
+      return null;
     });
 
     dances.standard.map(item => {
       dances.standard[item] = false;
+      return null;
     });
 
     dances.misc.map(item => {
       dances.misc[item] = false;
+      return null;
     });
 
     this.state = {
@@ -101,7 +105,7 @@ export class MusicSearch extends Component {
   };
 
   handleSearchEnter = (e, data) => {
-    if (e.key == "Enter") {
+    if (e.key === "Enter") {
       this.handleSearchSubmit();
     }
   };

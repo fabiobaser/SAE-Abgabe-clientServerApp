@@ -1,4 +1,5 @@
 import React, { Component } from "react";
+// eslint-disable-next-line
 import { BrowserRouter as Switch, Route } from "react-router-dom";
 
 //COMPS

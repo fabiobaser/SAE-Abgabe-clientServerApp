@@ -24,15 +24,12 @@ exports.queryMusic = (req, res, next) => {
       console.error("Error while performing query: ", err);
       res.send(null);
     } else {
-      console.log(req.query);
       res.send(rows);
     }
   });
 };
 
 exports.addSong2 = (req, res) => {
-  console.log(req.query);
-
   if (
     typeof req.query.title != "undefined" &&
     req.query.title !== "" &&
@@ -78,8 +75,6 @@ exports.addSong2 = (req, res) => {
             res.sendStatus(200);
           }
         });
-
-        console.log(outputDances);
       } else {
         //FOUND
         remoteDances = JSON.parse(results[0].dances);
@@ -110,8 +105,6 @@ exports.addSong2 = (req, res) => {
             res.sendStatus(200);
           }
         });
-
-        console.log(remoteDances);
       }
     });
   }

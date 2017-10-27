@@ -5,18 +5,20 @@ exports.sortObject = (object, direction) => {
     return object[b] - object[a];
   });
 
-  if (direction == "desc") {
+  if (direction === "desc") {
     sortArray.slice(0, 2).map(item => {
       returnObj[item] = object[item];
+      return null;
     });
 
     return returnObj;
-  } else if (direction == "asc") {
+  } else if (direction === "asc") {
     sortArray
       .reverse()
       .slice(0, 2)
       .map(item => {
         returnObj[item] = object[item];
+        return null;
       });
 
     return returnObj;
