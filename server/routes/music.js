@@ -15,9 +15,17 @@ exports.queryMusic = (req, res, next) => {
   const subst = `\\$1`;
 
   // The substituted value will be contained in the result variable
-  let query = req.query.title.replace(regex, subst);
+  // let query = req.query.title.replace(regex, subst);
 
-  let sql = "SELECT * FROM tracks WHERE title LIKE '%" + req.query.title + "%'";
+  let sql;
+
+  if (req.query.type === "title") {
+    sql = "SELECT * FROM tracks WHERE title LIKE '%" + req.query.title + "%'";
+  } else if (req.query.type === "artist") {
+    sql = "SELECT * FROM tracks WHERE artist LIKE '%" + req.query.artist + "%'";
+  } else {
+    sql = "SELECT * FROM tracks";
+  }
 
   con.query(sql, (err, rows, fields) => {
     if (err) {

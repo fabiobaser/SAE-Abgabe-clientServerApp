@@ -17,23 +17,6 @@ export class MusicSearch extends Component {
       return null;
     });
 
-    let dances = config.dances;
-
-    dances.latein.map(item => {
-      dances.latein[item] = false;
-      return null;
-    });
-
-    dances.standard.map(item => {
-      dances.standard[item] = false;
-      return null;
-    });
-
-    dances.misc.map(item => {
-      dances.misc[item] = false;
-      return null;
-    });
-
     this.state = {
       cycleCount: 0,
       data: [],
@@ -42,7 +25,7 @@ export class MusicSearch extends Component {
       inputValue: "",
       searchSelect: "title",
       tags: tags,
-      searchDances: config.dances,
+      searchDances: [],
       dances: config.dances.latein.concat(config.dances.standard, config.dances.misc)
     };
   }
@@ -68,6 +51,9 @@ export class MusicSearch extends Component {
   handleSearchDance = (e, { name }) => {
     let searchDances = this.state.searchDances;
     searchDances[name] = !this.state.searchDances[name];
+    if (searchDances.hasOwnProperty(name) && !searchDances[name]) {
+      delete searchDances[name];
+    }
     this.setState(searchDances);
   };
 
@@ -96,12 +82,38 @@ export class MusicSearch extends Component {
   };
 
   handleInputChange = (e, data) => {
-    this.setState({ inputValue: data.value });
+    this.setState({ inputValue: data.value }, () => {
+      this.handleSearchSubmit();
+    });
   };
 
   handleSearchSubmit = (e, data) => {
-    console.log("Hello, this is a test");
-    console.log(this.state.inputValue);
+    let self = this;
+
+    let parameter = {};
+
+    if (this.state.searchSelect === "title") {
+      parameter = {
+        type: this.state.searchSelect,
+        title: this.state.inputValue
+      };
+    } else if (this.state.searchSelect === "artist") {
+      parameter = {
+        type: this.state.searchSelect,
+        artist: this.state.inputValue
+      };
+    }
+
+    axios
+      .get("http://localhost:5000/music/", {
+        params: parameter
+      })
+      .then(function(response) {
+        self.setState({ data: response.data });
+      })
+      .catch(function(error) {
+        console.error(error);
+      });
   };
 
   handleSearchEnter = (e, data) => {
@@ -110,10 +122,41 @@ export class MusicSearch extends Component {
     }
   };
 
-  render() {
-    const { data, column, direction, inputValue, searchSelect } = this.state;
+  handleSelectChange = (e, data) => {
+    this.setState({ searchSelect: data.value });
+  };
 
-    let song = data.map((item, index) => {
+  render() {
+    let { data, column, direction, inputValue, searchSelect, searchDances } = this.state;
+
+    let searchArr = Object.keys(searchDances);
+
+    let newData = [];
+
+    data.map((item, index) => {
+      let sortedArray = sorts.sortObject(JSON.parse(item.dances), "desc");
+
+      if (searchArr.length > 0) {
+        searchArr.map(searchDance => {
+          if (sortedArray.hasOwnProperty(searchDance)) {
+            newData.push(data[index]);
+            return;
+          }
+        });
+      } else {
+        newData = data;
+      }
+    });
+
+    var uniq = new Set(newData.map(e => JSON.stringify(e)));
+
+    var res = Array.from(uniq).map(e => JSON.parse(e));
+
+    newData = res;
+
+    console.log(res);
+
+    let song = newData.map((item, index) => {
       return (
         <Table.Row key={item.trackID}>
           <Table.Cell>{item.title}</Table.Cell>
@@ -203,17 +246,20 @@ export class MusicSearch extends Component {
                 size="big"
                 action
                 fluid
+                color="teal"
                 value={inputValue}
                 onChange={this.handleInputChange}
-                onKeyPress={this.handleSearchEnter}>
+                onKeyPress={this.handleSearchEnter}
+                style={{ boxShadow: "0 0 20px 0px rgba(0,0,0,0.1)" }}>
                 <input />
-                <Select compact options={searchDrop} value={searchSelect} />
-                <Button
+                <Select compact options={searchDrop} defaultValue="title" onChange={this.handleSelectChange} />
+                {/* NOTE: Button can be reinserted when "onChange" does take too long because of DB size */}
+                {/* <Button
                   color="teal"
                   icon="search"
                   style={{ paddingLeft: "1.5em", paddingRight: "1.5em" }}
                   onClick={this.handleSearchSubmit}
-                />
+                /> */}
               </Input>
             </Grid.Column>
             <Grid.Column width={5} />
