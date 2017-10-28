@@ -149,7 +149,6 @@ export class MusicSearch extends Component {
     });
 
     var uniq = new Set(newData.map(e => JSON.stringify(e)));
-
     var res = Array.from(uniq).map(e => JSON.parse(e));
 
     newData = res;
