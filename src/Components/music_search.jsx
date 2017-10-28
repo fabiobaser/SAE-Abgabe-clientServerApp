@@ -154,8 +154,6 @@ export class MusicSearch extends Component {
 
     newData = res;
 
-    console.log(res);
-
     let song = newData.map((item, index) => {
       return (
         <Table.Row key={item.trackID}>
