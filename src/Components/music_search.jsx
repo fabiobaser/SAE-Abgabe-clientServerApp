@@ -11,12 +11,6 @@ export class MusicSearch extends Component {
   constructor() {
     super();
 
-    let tags = {};
-    config.tags.map(item => {
-      tags[item] = false;
-      return null;
-    });
-
     this.state = {
       cycleCount: 0,
       data: [],
@@ -24,7 +18,7 @@ export class MusicSearch extends Component {
       direction: null,
       inputValue: "",
       searchSelect: "title",
-      tags: tags,
+      tags: [],
       searchDances: [],
       dances: config.dances.latein.concat(config.dances.standard, config.dances.misc)
     };
@@ -35,7 +29,7 @@ export class MusicSearch extends Component {
     let self = this;
 
     axios
-      .get("http://localhost:5000/music/", {
+      .get(config.webserverURL + "music", {
         params: {
           title: ""
         }
@@ -60,6 +54,9 @@ export class MusicSearch extends Component {
   handleSearchTag = (e, { name }) => {
     let searchTags = this.state.tags;
     searchTags[name] = !this.state.tags[name];
+    if (searchTags.hasOwnProperty(name) && !searchTags[name]) {
+      delete searchTags[name];
+    }
     this.setState({ tags: searchTags });
   };
 
@@ -116,7 +113,7 @@ export class MusicSearch extends Component {
       });
   };
 
-  handleSearchEnter = (e, data) => {
+  handleSearchEnter = e => {
     if (e.key === "Enter") {
       this.handleSearchSubmit();
     }
@@ -127,33 +124,44 @@ export class MusicSearch extends Component {
   };
 
   render() {
-    let { data, column, direction, inputValue, searchSelect, searchDances } = this.state;
+    let { data, column, direction, inputValue, searchSelect, searchDances, tags } = this.state;
 
     let searchArr = Object.keys(searchDances);
-
+    let tagsArr = Object.keys(tags);
     let newData = [];
 
-    data.map((item, index) => {
-      let sortedArray = sorts.sortObject(JSON.parse(item.dances), "desc");
+    if (searchArr.length > 0) {
+      data.map((item, index) => {
+        let sortedArray = sorts.sortObject(JSON.parse(item.dances), "desc");
 
-      if (searchArr.length > 0) {
         searchArr.map(searchDance => {
           if (sortedArray.hasOwnProperty(searchDance)) {
             newData.push(data[index]);
-            return;
           }
         });
-      } else {
-        newData = data;
-      }
-    });
+      });
+    } else {
+      newData = data;
+    }
+
+    if (tagsArr.length > 0) {
+      console.log("Hello, this is a test");
+      let tmpData = [];
+      newData.map((item, index) => {
+        let tagsArray = sorts.sortObject(JSON.parse(item.tags), "desc");
+
+        tagsArr.map(searchDance => {
+          if (tagsArray.hasOwnProperty(searchDance)) {
+            tmpData.push(newData[index]);
+          }
+        });
+      });
+      newData = tmpData;
+    }
 
     var uniq = new Set(newData.map(e => JSON.stringify(e)));
     var res = Array.from(uniq).map(e => JSON.parse(e));
-
     newData = res;
-
-    console.log(res);
 
     let song = newData.map((item, index) => {
       return (
@@ -214,7 +222,7 @@ export class MusicSearch extends Component {
       );
     });
 
-    let searchTagsElem = Object.keys(this.state.tags).map((tag, tagIndex) => {
+    let searchTagsElem = config.tags.map((tag, tagIndex) => {
       let labelState;
       if (this.state.tags[tag]) {
         labelState = "pink";

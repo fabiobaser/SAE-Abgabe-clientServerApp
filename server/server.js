@@ -38,6 +38,8 @@ app.get("/", idle);
 app.get("/music/", music.queryMusic);
 app.get("/music/add", music.addSong2);
 
+app.get("/music/playlists", music.getPlaylists);
+
 app.get("/insert/", music.insertMySQL);
 
 app.post("/user/add/", user.addUser);
@@ -45,16 +47,6 @@ app.post("/user/check/", user.checkUsername);
 app.post("/user/login/", user.checkLogin);
 
 app.get("/api/search/");
-
-//app.get('/employees/:id', employees.findByID);
-
-//app.get('/events/', events.getAll);
-
-//app.get('/photos/', photos.getAlbums);
-//app.get('/photos/:albumId', photos.findByID);
-
-//Wildcard-Case for general Result
-//app.get('*', employees.findAll);
 
 app.set("port", process.env.PORT || config["expressConfig"].PORT);
 

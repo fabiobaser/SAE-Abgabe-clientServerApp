@@ -6,6 +6,7 @@ import { BrowserRouter as Switch, Route } from "react-router-dom";
 import { TopMenu } from "./Components/general";
 import { MusicAdd } from "./Components/music_add";
 import { MusicSearch } from "./Components/music_search";
+import { MusicPlaylists } from "./Components/music_playlists";
 
 class Home extends Component {
   render() {
@@ -27,7 +28,7 @@ export default class App extends Component {
 
           <Route path="/music/search" component={MusicSearch} />
           <Route path="/music/add" component={MusicAdd} />
-          {/* <Route path="/music/playlists" component={Music.Playlists} /> */}
+          <Route path="/music/playlists" component={MusicPlaylists} />
 
           {/* <Route path="/schools" component={Schools} /> */}
         </div>

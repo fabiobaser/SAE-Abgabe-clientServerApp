@@ -65,7 +65,7 @@ exports.addSong2 = (req, res) => {
         });
 
         let sqlInsert =
-          "INSERT INTO `tracks` (`trackID`, `title`, `artist`, `dances`, `tags`) VALUES (NULL, '" +
+          "INSERT INTO `tracks` (`trackID`, `title`, `artist`, `dances`, `tags`, `coverURL`) VALUES (NULL, '" +
           req.query.title +
           "', '" +
           req.query.artist +
@@ -73,6 +73,8 @@ exports.addSong2 = (req, res) => {
           JSON.stringify(outputDances) +
           "', '" +
           JSON.stringify(outputTags) +
+          "', '" +
+          req.query.coverURL +
           "')";
 
         con.query(sqlInsert, (err, rows, fields) => {
@@ -118,38 +120,18 @@ exports.addSong2 = (req, res) => {
   }
 };
 
-exports.addSong = (req, res) => {
-  if (
-    typeof req.query.title != "undefined" &&
-    req.query.title !== "" &&
-    typeof req.query.artist != "undefined" &&
-    req.query.artist !== "" &&
-    typeof req.query.dances != "undefined" &&
-    req.query.dances !== "" &&
-    typeof req.query.tags != "undefined" &&
-    req.query.tags !== ""
-  ) {
-    let sql =
-      "INSERT INTO `tracks` (`trackID`, `title`, `artist`, `dances`, `tags`) VALUES (NULL, '" +
-      req.query.title +
-      "', '" +
-      req.query.artist +
-      "', '" +
-      req.query.dances +
-      "', '" +
-      req.query.tags +
-      "')";
+exports.getPlaylists = (req, res) => {
+  let sql =
+    "SELECT tracks.trackID, title, artist, dances, tags, coverURL FROM playlists, tracks WHERE playlists.playlistID = 1 AND playlists.trackID = tracks.trackID";
 
-    con.query(sql, (err, rows, fields) => {
-      if (err) {
-        res.sendStatus(500);
-      } else {
-        res.sendStatus(200);
-      }
-    });
-  } else {
-    res.sendStatus(505);
-  }
+  con.query(sql, (err, rows) => {
+    if (err) {
+      console.error(err);
+      res.sendStatus(500);
+    } else {
+      res.send(rows);
+    }
+  });
 };
 
 exports.getAll = (req, res, next) => {
