@@ -149,7 +149,8 @@ export class MusicAdd extends Component {
             title: this.state.titleValue.replace(regex, subst),
             artist: this.state.artistValue.replace(regex, subst),
             dances: JSON.stringify(this.state.dancesArray),
-            tags: JSON.stringify(this.state.tagsArray)
+            tags: JSON.stringify(this.state.tagsArray),
+            coverURL: this.state.cover
           }
         })
         .then(function(response) {

@@ -1,0 +1,20 @@
+.ui.fluid.input > input {
+  text-align: center;
+}
+
+.ui.table [class*="single line"],
+.ui.table[class*="single line"] {
+  border: 0;
+}
+
+.add_table_artist {
+  font-size: 100%;
+}
+
+.add_table_title {
+  font-size: 160%;
+}
+
+.play {
+  transform: translateX(1px);
+}

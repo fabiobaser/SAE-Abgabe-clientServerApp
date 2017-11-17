@@ -41,8 +41,6 @@ exports.addSong2 = (req, res) => {
   if (
     typeof req.query.title != "undefined" &&
     req.query.title !== "" &&
-    typeof req.query.appleMusicID != "undefined" &&
-    req.query.appleMusicID !== "" &&
     typeof req.query.artist != "undefined" &&
     req.query.artist !== "" &&
     typeof req.query.dances != "undefined" &&
@@ -54,10 +52,6 @@ exports.addSong2 = (req, res) => {
       "SELECT trackID, dances FROM tracks WHERE `title` LIKE '" + req.query.title + "' AND `artist` LIKE '" + req.query.artist + "'";
 
     con.query(sqlGetID, (error, results) => {
-      if (error) {
-        console.error(error);
-        return;
-      }
       if (results.length === 0) {
         //Not found
         let outputDances = {};
@@ -71,9 +65,7 @@ exports.addSong2 = (req, res) => {
         });
 
         let sqlInsert =
-          "INSERT INTO `tracks` (`trackID`, `appleMusicID`, `title`, `artist`, `dances`, `tags`, `coverURL`) VALUES (NULL, '" +
-          req.query.appleMusicID +
-          "', '" +
+          "INSERT INTO `tracks` (`trackID`, `title`, `artist`, `dances`, `tags`) VALUES (NULL, '" +
           req.query.title +
           "', '" +
           req.query.artist +
@@ -81,8 +73,6 @@ exports.addSong2 = (req, res) => {
           JSON.stringify(outputDances) +
           "', '" +
           JSON.stringify(outputTags) +
-          "', '" +
-          req.query.coverURL +
           "')";
 
         con.query(sqlInsert, (err, rows, fields) => {

@@ -1,0 +1,25 @@
+{
+  "name": "web_app_server",
+  "version": "1.0.0",
+  "description": "Server-Side of Web Application for delivering Data from SQL-Database",
+  "main": "server.js",
+  "scripts": {
+    "test": "echo 'No Test-Command given'",
+    "start": "clear && node server.js"
+  },
+  "keywords": [
+    "server",
+    "sql",
+    "async"
+  ],
+  "author": "Fabio Baser",
+  "license": "ISC",
+  "dependencies": {
+    "body-parser": "^1.18.2",
+    "cli-color": "^1.2.0",
+    "express": "^4.16.1",
+    "itunes-search": "^1.0.1",
+    "method-override": "^2.3.10",
+    "mysql": "^2.14.1"
+  }
+}
