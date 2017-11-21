@@ -1,6 +1,5 @@
 import React, { Component } from "react";
 import axios from "axios";
-<<<<<<< HEAD
 import { Grid, Card, Feed } from "semantic-ui-react";
 //Helper
 const _ = require("lodash");
@@ -8,7 +7,6 @@ const _ = require("lodash");
 const config = require("../config");
 
 export class MusicPlaylists extends Component {
-=======
 import { Card, Feed, Image, Grid } from "semantic-ui-react";
 import ToolTip from "react-portal-tooltip";
 //Config
@@ -16,12 +14,10 @@ import ToolTip from "react-portal-tooltip";
 import config from "../config";
 
 class Playlist extends Component {
->>>>>>> appleMusic
   constructor() {
     super();
 
     this.state = {
-<<<<<<< HEAD
       playlists: {
         "Dirty Dancing": [{ trackID: 2, title: "Hallo", artist: "Peter", cover: "" }]
       }
@@ -86,10 +82,6 @@ class Playlist extends Component {
           </Feed>
         </Card.Content>
       </Card>
-=======
-      spotifyNotif: false
-    };
-  }
 
   showSpotifyNotif = () => {
     this.setState({ spotifyNotif: true });
