@@ -13,10 +13,19 @@ export class TopMenu extends Component {
   render() {
     const path = location.pathname; // eslint-disable-line no-restricted-globals
 
+    console.log(path);
+
+    let homeBtn;
+    if (path !== "/") {
+      homeBtn = <Menu.Item header>Projekt Tanzsalon</Menu.Item>;
+    } else {
+      homeBtn = null;
+    }
+
     return (
-      <Segment inverted style={{ borderRadius: "0" }}>
+      <Segment inverted style={{ borderRadius: "0", marginBottom: "0" }}>
         <Menu inverted pointing secondary stackable>
-          <Menu.Item header>Projekt Tanzsalon</Menu.Item>
+          {homeBtn}
           <Menu.Menu position="right">
             <Menu.Item as={NavLink} to="/" exact>
               Home

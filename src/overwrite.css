@@ -1,3 +1,18 @@
+* {
+  -webkit-font-smoothing: antialiased;
+}
+
+body::-webkit-scrollbar {
+  width: 5px;
+}
+body::-webkit-scrollbar-track {
+  background: white;
+}
+
+body::-webkit-scrollbar-thumb {
+  background: #e03997;
+}
+
 .ui.fluid.input > input {
   text-align: center;
 }
@@ -17,4 +32,31 @@
 
 .play {
   transform: translateX(1px);
+}
+
+.dimmer {
+  background-color: rgba(0, 0, 0, 0.91);
+}
+
+.ui.fluid.input > input {
+  color: #e03997;
+}
+
+.ui.fluid.input > input::selection {
+  color: white;
+  background: #e03997; /* WebKit/Blink Browsers */
+}
+
+.ui.feed > .event:last-child > .content {
+  margin-top: 0;
+  margin-bottom: 0;
+}
+
+.ui.feed > .event > .content .summary {
+  font-size: 120%;
+  margin-bottom: 0.4em;
+}
+
+.ui.feed > .event > .label img {
+  border-radius: 0;
 }

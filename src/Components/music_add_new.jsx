@@ -311,13 +311,13 @@ class SongRow extends Component {
             open={this.state.modalOpen}
             onClose={this.handleModalClose}
             closeIcon
-            trigger={<Button basic circular color="teal" size="small" icon="add" onClick={this.handleAddClick} />}
+            trigger={<Button basic circular color="pink" size="small" icon="add" onClick={this.handleAddClick} />}
             style={{ textAlign: "center" }}>
             <Modal.Header>
-              <Header as="h1" style={{ fontSize: "180%", color: "white" }}>
+              <Header as="h1" style={{ marginBottom: "0", fontSize: "260%", fontWeight: "100", color: "white" }}>
                 {this.props.title}
               </Header>
-              <Header as="h3" style={{ fontSize: "120%", color: "white" }}>
+              <Header as="h3" style={{ marginTop: "0", marginBottom: "3em", fontSize: "120%", fontWeight: "400", color: "white" }}>
                 {this.props.artist}
               </Header>
             </Modal.Header>
@@ -338,7 +338,7 @@ class SongRow extends Component {
                         Wähle bitte mindestens einen Tanz aus
                       </Label>
                     )}
-                    <p>Und was kann man dazu tanzen?</p>
+                    <p style={{ fontWeight: 400 }}>Und was kann man dazu tanzen?</p>
                     <Container width={4}>
                       <Label.Group>{latein}</Label.Group>
                     </Container>
@@ -352,7 +352,7 @@ class SongRow extends Component {
                     </Container>
                     <br />
 
-                    <p>Etwas bessonderes?</p>
+                    <p style={{ fontWeight: 400 }}>Etwas bessonderes?</p>
                     <Container width={4}>
                       <Label.Group>{tags}</Label.Group>
                     </Container>
@@ -360,7 +360,7 @@ class SongRow extends Component {
                 </Grid.Row>
                 <Grid.Row>
                   <Grid.Column width={16}>
-                    <Button color="teal" onClick={this.handleSubmit} style={{ marginTop: "3em", marginBottom: "3em" }}>
+                    <Button color="pink" onClick={this.handleSubmit} style={{ marginTop: "3em", marginBottom: "3em" }}>
                       Abschicken
                     </Button>
                   </Grid.Column>
@@ -434,8 +434,10 @@ export class MusicAdd extends Component {
   };
 
   handleSearchInputChange = (e, { value }) => {
-    this.updateSongs(value);
-    this.setState({ searchTerm: value });
+    this.setState({ searchResults: [] }, () => {
+      this.updateSongs(value);
+      this.setState({ searchTerm: value });
+    });
   };
 
   render() {
@@ -463,6 +465,7 @@ export class MusicAdd extends Component {
             <Input
               transparent
               fluid
+              className="addSearchInput"
               placeholder="Song finden ..."
               style={{ fontSize: "4em", textAlign: "center", marginTop: "1em", marginBottom: "1em" }}
               onChange={this.handleSearchInputChange}
