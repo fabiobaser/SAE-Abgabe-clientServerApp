@@ -1,6 +1,6 @@
 import React, { Component } from "react";
 import axios from "axios";
-import { Grid, Table, Label, Input, Button, Header, Select } from "semantic-ui-react";
+import { Grid, Table, Label, Input, Header, Select } from "semantic-ui-react";
 //Helper
 const sorts = require("../Helper/sorts");
 const _ = require("lodash");
