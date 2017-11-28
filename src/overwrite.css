@@ -3,14 +3,19 @@
 }
 
 body::-webkit-scrollbar {
-  width: 5px;
+  width: 10px;
 }
 body::-webkit-scrollbar-track {
   background: white;
 }
 
 body::-webkit-scrollbar-thumb {
-  background: #e03997;
+  background: #88a78a;
+}
+
+.ui.basic.button.searchAddBtn {
+  color: #88a78a !important;
+  box-shadow: 0px 0px 0px 1px #88a78a inset !important;
 }
 
 .ui.fluid.input > input {

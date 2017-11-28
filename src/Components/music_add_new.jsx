@@ -284,7 +284,7 @@ class SongRow extends Component {
     return (
       <Table.Row>
         <Table.Cell collapsing>
-          <Image ui src={this.props.coverURL.replace("{w}", "200").replace("{h}", "200")} size="tiny" />
+          <Image ui src={this.props.coverURL.replace("{w}", "100").replace("{h}", "100")} size="tiny" />
         </Table.Cell>
         <Table.Cell collapsing>
           <Button
@@ -311,7 +311,17 @@ class SongRow extends Component {
             open={this.state.modalOpen}
             onClose={this.handleModalClose}
             closeIcon
-            trigger={<Button basic circular color="pink" size="small" icon="add" onClick={this.handleAddClick} />}
+            trigger={
+              <Button
+                basic
+                circular
+                size="small"
+                icon="add"
+                style={{ background: "red" }}
+                onClick={this.handleAddClick}
+                className="searchAddBtn"
+              />
+            }
             style={{ textAlign: "center" }}>
             <Modal.Header>
               <Header as="h1" style={{ marginBottom: "0", fontSize: "260%", fontWeight: "100", color: "white" }}>
@@ -328,7 +338,7 @@ class SongRow extends Component {
                     <Image
                       wrapped
                       fluid
-                      src={this.props.coverURL.replace("{w}", "1000").replace("{h}", "1000")}
+                      src={this.props.coverURL.replace("{w}", "400").replace("{h}", "400")}
                       style={{ display: "inline-block" }}
                     />
                   </Grid.Column>
