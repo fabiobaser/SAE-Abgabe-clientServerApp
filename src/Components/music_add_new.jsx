@@ -63,36 +63,6 @@ class SongRow extends Component {
     });
   };
 
-  handlePlayPause = (e, { value }) => {
-    let audio = document.getElementById("audio");
-    let source = document.getElementById("audioSource");
-    if (source.src === value) {
-      if (audio.paused) {
-        this.setState({ playing: true }, () => {
-          audio.play();
-        });
-      } else {
-        this.setState({ playing: false }, () => {
-          audio.pause();
-        });
-      }
-    } else {
-      source.src = value;
-      audio.load();
-      this.setState({ playing: true }, () => {
-        audio.play();
-      });
-    }
-
-    audio.addEventListener(
-      "ended",
-      () => {
-        this.setState({ playing: false });
-      },
-      false
-    );
-  };
-
   handleAddClick = (e, data) => {
     this.handleModalOpen();
     this.setState({
@@ -291,9 +261,10 @@ class SongRow extends Component {
             basic
             circular
             size="small"
-            icon={this.state.playing ? "pause" : "play"}
-            onClick={this.handlePlayPause}
+            icon={this.props.index === this.props.activeSong ? "pause" : "play"}
+            onClick={this.props.playSong}
             value={this.props.previewURL}
+            index={this.props.index}
           />
         </Table.Cell>
         <Table.Cell>
@@ -392,7 +363,8 @@ export class MusicAdd extends Component {
       searchTerm: "Nothing else",
       searchResults: [],
       isLoading: false,
-      searchType: "songs"
+      searchType: "songs",
+      activeSong: false
     };
   }
 
@@ -443,6 +415,25 @@ export class MusicAdd extends Component {
     }
   };
 
+  playSong = (e, { index, value }) => {
+    let audio = document.getElementById("audio");
+    let source = document.getElementById("audioSource");
+
+    if (this.state.activeSong === index) {
+      //Pause current Song
+      this.setState({ activeSong: false }, () => {
+        audio.pause();
+      });
+    } else {
+      //Load and Play Song
+      this.setState({ activeSong: index }, () => {
+        source.src = value;
+        audio.load();
+        audio.play();
+      });
+    }
+  };
+
   handleSearchInputChange = (e, { value }) => {
     this.setState({ searchResults: [] }, () => {
       this.updateSongs(value);
@@ -451,7 +442,7 @@ export class MusicAdd extends Component {
   };
 
   render() {
-    let { searchResults, isLoading } = this.state;
+    let { searchResults, isLoading, activeSong } = this.state;
 
     let songs = searchResults.map((item, index) => {
       return (
@@ -463,6 +454,9 @@ export class MusicAdd extends Component {
           coverURL={item.attributes.artwork.url}
           colors={item.attributes.artwork}
           previewURL={item.attributes.previews[0].url}
+          index={index}
+          activeSong={activeSong}
+          playSong={this.playSong}
           key={item.id}
         />
       );

@@ -15,9 +15,32 @@ const schulen = [
     tags: ["Paartanz", "Steppen", "Hip-Hop", "Zumba"]
   },
   { name: "Mein Tanzstudio", short: "Mein Tanzstudio", coords: { lat: 53.562643, lng: 10.07141 }, tags: ["Paartanz", "Ballet", "Yoga"] },
-  { name: "Tanzschule S-Eins", short: "S-Eins", coords: { lat: 53.661095, lng: 10.086359 }, tags: ["Paartanz", "Schauspiel", "Gesang"] }
+  { name: "Tanzschule S-Eins", short: "S-Eins", coords: { lat: 53.661095, lng: 10.086359 }, tags: ["Paartanz", "Schauspiel", "Gesang"] },
+  {
+    name: "Walter Bartel",
+    short: "W. Bartel",
+    coords: { lat: 53.569014, lng: 10.026308 },
+    tags: ["Paartanz", "Yoga", "Hip-Hop"]
+  },
+  {
+    name: "Schrittmacher",
+    short: "Schrittmacher",
+    coords: { lat: 53.560927, lng: 9.916891 },
+    tags: ["Paartanz", "Swing", "Dancehall"]
+  },
+  {
+    name: "Tangostudio el abrazo",
+    short: "el abrazo",
+    coords: { lat: 53.564711, lng: 9.921243 },
+    tags: ["Tango Argentino"]
+  },
+  {
+    name: "Ballettstudio Gitta Luckau",
+    short: "Gitta Luckau",
+    coords: { lat: 53.574244, lng: 10.019879 },
+    tags: ["Ballett"]
+  }
 ];
-
 class SimpleMap extends React.Component {
   constructor(props) {
     super(props);
@@ -95,7 +118,11 @@ class SimpleMap extends React.Component {
           circular
           color="blue"
           size="large"
-          style={{ boxShadow: "0 0 0 2px white", width: "1em", transform: "translate(-46%,-44%)" }}
+          style={{
+            boxShadow: "0 0 0 2px white, 0 0 0 " + (this.state.zoom * 4 - 30) + "px rgba(0,0,255,0.1)",
+            width: "1em",
+            transform: "translate(-46%,-44%)"
+          }}
           lat={this.state.currentPosition.lat}
           lng={this.state.currentPosition.lng}
         />
@@ -154,14 +181,18 @@ export class Schools extends Component {
   render() {
     let schoolRows = schulen.map(schule => {
       return (
-        <Table.Row>
+        <Table.Row key={schule.name}>
           <Table.Cell collapsing style={{ fontWeight: "400", fontSize: "120%" }}>
             {schule.name}
           </Table.Cell>
           <Table.Cell textAlign="left">{this.formatPosition(schule)}</Table.Cell>
           <Table.Cell textAlign="right">
-            {schule.tags.map(tag => {
-              return <Label basic>{tag}</Label>;
+            {schule.tags.map((tag, tagIndex) => {
+              return (
+                <Label basic key={tagIndex + " : " + tag}>
+                  {tag}
+                </Label>
+              );
             })}
           </Table.Cell>
           <Table.Cell collapsing>

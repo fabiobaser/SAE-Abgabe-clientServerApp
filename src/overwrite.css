@@ -3,7 +3,7 @@
 }
 
 body::-webkit-scrollbar {
-  width: 10px;
+  width: 5px;
 }
 body::-webkit-scrollbar-track {
   background: white;
@@ -40,16 +40,16 @@ body::-webkit-scrollbar-thumb {
 }
 
 .dimmer {
-  background-color: rgba(0, 0, 0, 0.91);
+  background-color: rgba(0, 0, 0, 0.9) !important;
 }
 
 .ui.fluid.input > input {
-  color: #e03997;
+  color: #88a78a;
 }
 
 .ui.fluid.input > input::selection {
   color: white;
-  background: #e03997; /* WebKit/Blink Browsers */
+  background: #88a78a; /* WebKit/Blink Browsers */
 }
 
 .ui.feed > .event:last-child > .content {
