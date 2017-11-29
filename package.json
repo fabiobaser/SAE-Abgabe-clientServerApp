@@ -5,11 +5,11 @@
   "dependencies": {
     "axios": "^0.16.2",
     "google-map-react": "^0.25.0",
-    "google-maps": "^3.2.1",
     "lodash": "^4.17.4",
+    "rc-animate": "^2.4.1",
     "react": "^16.0.0",
+    "react-anime": "^2.0.1",
     "react-dom": "^16.0.0",
-    "react-google-maps": "^9.2.2",
     "react-portal-tooltip": "^2.1.1",
     "react-router-dom": "^4.2.2",
     "react-scripts": "1.0.14",

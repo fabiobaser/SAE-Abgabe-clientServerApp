@@ -9,14 +9,13 @@ export class Home extends Component {
   render() {
     return (
       <Segment
-        fluid
         basic
         style={{
           marginTop: "0",
           background: "url(/assets/splash.jpg)",
           backgroundSize: "cover",
           backgroundPosition: "center",
-          height: "calc(100vh - 72px)",
+          height: "calc(100vh - 70px)",
           textAlign: "center"
         }}>
         <Header as="h1" style={{ marginTop: "30vh", color: "white", fontSize: "500%", fontWeight: "400" }}>

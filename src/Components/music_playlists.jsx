@@ -1,5 +1,6 @@
 import React, { Component } from "react";
 import axios from "axios";
+<<<<<<< HEAD
 import { Grid, Card, Feed } from "semantic-ui-react";
 //Helper
 const _ = require("lodash");
@@ -8,6 +9,9 @@ const config = require("../config");
 
 export class MusicPlaylists extends Component {
 import { Card, Feed, Image, Grid } from "semantic-ui-react";
+=======
+import { Card, Feed, Image, Grid, Button, Icon } from "semantic-ui-react";
+>>>>>>> appleMusic
 import ToolTip from "react-portal-tooltip";
 //Config
 // eslint-disable-next-line
@@ -18,9 +22,14 @@ class Playlist extends Component {
     super();
 
     this.state = {
+<<<<<<< HEAD
       playlists: {
         "Dirty Dancing": [{ trackID: 2, title: "Hallo", artist: "Peter", cover: "" }]
       }
+=======
+      spotifyNotif: false,
+      expanded: false
+>>>>>>> appleMusic
     };
   }
 
@@ -91,6 +100,10 @@ class Playlist extends Component {
     this.setState({ spotifyNotif: false });
   };
 
+  expandSongs = () => {
+    this.setState({ expanded: !this.state.expanded });
+  };
+
   render() {
     let dataSet = typeof this.props.playlists.length !== "undefined" && typeof this.props.playlists[this.props.index] !== "undefined";
 
@@ -154,7 +167,19 @@ class Playlist extends Component {
           </ToolTip>
         </Card.Content>
         <Card.Content>
-          <Feed>{songs}</Feed>
+          <Feed>
+            {this.state.expanded ? songs : null}
+            <Feed.Event>
+              <Feed.Content>
+                <Feed.Summary style={{ textAlign: "center" }}>
+                  <Button basic onClick={this.expandSongs}>
+                    {this.state.expanded ? <Icon name="angle up" /> : <Icon name="angle down" />}
+                    {this.state.expanded ? "Songs verdecken" : "Songs zeigen"}
+                  </Button>
+                </Feed.Summary>
+              </Feed.Content>
+            </Feed.Event>
+          </Feed>
         </Card.Content>
       </Card>
     );
@@ -219,19 +244,54 @@ export class MusicPlaylists extends Component {
         });
         this.setState({ playlists: tmp });
       });
+
+    axios
+      .get("https://api.music.apple.com/v1/catalog/de/playlists/" + "pl.u-PZ7DuypbyP6", {
+        headers: {
+          Authorization:
+            "Bearer eyJhbGciOiJFUzI1NiIsInR5cCI6IkpXVCIsImtpZCI6IjNKTEwyTTdFODMifQ.eyJpYXQiOjE1MDk3MTM1ODEsImV4cCI6MTUyNTI2NTU4MSwiaXNzIjoiNTZWVDczWVNQOSJ9.8wu6SY1g5mMBuzBlR26cPNCdA_L575nDxHvsCWm1GUqz_doCwKNlTLQ9oMATNKPWfzb11GfPaQf99-TwUMOTHQ"
+        }
+      })
+      .then(results => {
+        tmp.push({
+          name: results.data.data[0].attributes.name,
+          appleMusic: results.data.data[0].attributes.url,
+          tracks: results.data.data[0].relationships.tracks.data,
+          artwork: results.data.data[0].attributes.artwork.url
+        });
+        this.setState({ playlists: tmp });
+      });
+
+    axios
+      .get("https://api.music.apple.com/v1/catalog/de/playlists/" + "pl.0513010b42974e278816dbf91ac6dc6b", {
+        headers: {
+          Authorization:
+            "Bearer eyJhbGciOiJFUzI1NiIsInR5cCI6IkpXVCIsImtpZCI6IjNKTEwyTTdFODMifQ.eyJpYXQiOjE1MDk3MTM1ODEsImV4cCI6MTUyNTI2NTU4MSwiaXNzIjoiNTZWVDczWVNQOSJ9.8wu6SY1g5mMBuzBlR26cPNCdA_L575nDxHvsCWm1GUqz_doCwKNlTLQ9oMATNKPWfzb11GfPaQf99-TwUMOTHQ"
+        }
+      })
+      .then(results => {
+        tmp.push({
+          name: results.data.data[0].attributes.name,
+          appleMusic: results.data.data[0].attributes.url,
+          tracks: results.data.data[0].relationships.tracks.data,
+          artwork: results.data.data[0].attributes.artwork.url
+        });
+        this.setState({ playlists: tmp });
+      });
   }
 
   render() {
+    let playlists = [0, 1, 2, 3].map(item => {
+      return (
+        <Grid.Column computer={5} tablet={8} mobile={16} style={{ marginTop: "2em" }}>
+          <Playlist index={item} playlists={this.state.playlists} key={item} />
+        </Grid.Column>
+      );
+    });
+
     return (
-      <Grid centered>
-        <Grid.Row columns={4}>
-          <Grid.Column>
-            <Playlist index={0} playlists={this.state.playlists} key={0} />
-          </Grid.Column>
-          <Grid.Column>
-            <Playlist index={1} playlists={this.state.playlists} key={0} />
-          </Grid.Column>
-        </Grid.Row>
+      <Grid centered padded>
+        <Grid.Row columns={16}>{playlists}</Grid.Row>
       </Grid>
 >>>>>>> appleMusic
     );

@@ -13,11 +13,13 @@ export class TopMenu extends Component {
   render() {
     const path = location.pathname; // eslint-disable-line no-restricted-globals
 
-    console.log(path);
-
     let homeBtn;
     if (path !== "/") {
-      homeBtn = <Menu.Item header>Projekt Tanzsalon</Menu.Item>;
+      homeBtn = (
+        <Menu.Item header>
+          <a href="/">Projekt Tanzsalon</a>
+        </Menu.Item>
+      );
     } else {
       homeBtn = null;
     }
